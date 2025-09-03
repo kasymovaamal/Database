@@ -1,0 +1,24 @@
+Last login: Wed Sep  3 23:41:08 on ttys001
+amal@MacBook-Air-Amal-2 ~ % psql -U postgres -d postgres -p 5432
+Password for user postgres: 
+psql (14.19 (Homebrew), server 17.6)
+WARNING: psql major version 14, server major version 17.
+         Some psql features might not work.
+Type "help" for help.
+
+postgres=# CREATE DATABASE university;
+CREATE DATABASE
+Previous connection kept
+postgres=# \c university 
+psql (14.19 (Homebrew), server 17.6)
+WARNING: psql major version 14, server major version 17.
+         Some psql features might not work.
+You are now connected to database "university" as user "postgres".
+university=# \c postgres
+psql (14.19 (Homebrew), server 17.6)
+WARNING: psql major version 14, server major version 17.
+         Some psql features might not work.
+You are now connected to database "postgres" as user "postgres".
+postgres=# DROP DATABASE university;
+DROP DATABASE
+postgres=# \q
