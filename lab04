@@ -1,0 +1,170 @@
+amal@MacBook-Air-Amal-2 ~ %  psql -U postgres -d postgres -p 5432
+Password for user postgres: 
+psql (14.19 (Homebrew), server 17.6)
+Type "help" for help.
+
+postgres=# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(3 rows)
+
+postgres=# \c postgres
+psql (14.19 (Homebrew), server 17.6)
+You are now connected to database "postgres" as user "postgres".
+postgres=# \dt
+Did not find any relations.
+postgres=# \c postgres
+psql (14.19 (Homebrew), server 17.6)
+You are now connected to database "postgres" as user "postgres".
+postgres=# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ public | students | table | postgres
+(1 row)
+
+postgres=# SELECT * FROM students;
+
+-- delete table
+DROP TABLE students;
+ id | name  | age 
+----+-------+-----
+  1 | Alice |  21
+  2 | Bob   |  23
+  3 | Alice |  21
+  4 | Bob   |  23
+(4 rows)
+
+DROP TABLE
+postgres=# \q
+amal@MacBook-Air-Amal-2 ~ % psql -U postgres -d postgres -p 5432
+
+Password for user postgres: 
+psql (14.19 (Homebrew), server 17.6)
+Type "help" for help.
+
+postgres=# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(3 rows)
+
+postgres=# \c postgres
+psql (14.19 (Homebrew), server 17.6)
+WARNING: psql major version 14, server major version 17.
+         Some psql features might not work.
+You are now connected to database "postgres" as user "postgres".
+postgres=# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ public | students | table | postgres
+(1 row)
+
+postgres=# CREATE TABLE IF NOT EXISTS students (
+  student_id     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  first_name     TEXT NOT NULL,
+  last_name      TEXT NOT NULL,
+  email          TEXT UNIQUE NOT NULL,
+  faculty        TEXT NOT NULL,
+  date_of_birth  DATE,
+  enrolled_on    DATE NOT NULL
+);
+CREATE TABLE
+NOTICE:  relation "students" already exists, skipping
+CREATE TABLE
+postgres-# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ public | students | table | postgres
+(1 row)
+
+postgres-# INSERT INTO students (first_name, last_name, email, faculty, date_of_birth, enrolled_on) VALUES
+  ('Amal', 'Kasymova', 'amal.kasymova@example.com', 'Computer Science', '2003-08-15', '2022-09-01'),
+  ('Askar', 'Lee', 'askar.lee@example.com', 'Mathematics', '2004-02-20', '2023-01-15'),
+  ('Lola', 'Amanova', 'lola.amanova@example.com', 'Biology', '2003-12-10', '2022-08-30'),
+  ('Lima', 'Yun', 'lima.yun@example.com', 'History', '2004-07-05', '2023-02-01'),
+  ('Bolot', 'Kas', 'bolot.kas@example.com', 'Physics', '2003-11-30', '2022-09-15');
+ERROR:  syntax error at or near "INTO"
+LINE 2: INSERT INTO students (first_name, last_name, email, faculty,...
+               ^
+postgres=# INSERT INTO students (first_name, last_name, email, faculty, date_of_birth, enrolled_on) VALUES
+  ('Amal', 'Kasymova', 'amal.kasymova@example.com', 'Computer Science', '2003-08-15', '2022-09-01'),
+  ('Askar', 'Lee', 'askar.lee@example.com', 'Mathematics', '2004-02-20', '2023-01-15'),
+  ('Lola', 'Amanova', 'lola.amanova@example.com', 'Biology', '2003-12-10', '2022-08-30'),
+  ('Lima', 'Yun', 'lima.yun@example.com', 'History', '2004-07-05', '2023-02-01'),
+  ('Bolot', 'Kas', 'bolot.kas@example.com', 'Physics', '2003-11-30', '2022-09-15');
+INSERT 0 5
+postgres=# select * from students;
+ student_id | first_name | last_name |           email           |     faculty      | date_of_birth | enrolled_on 
+------------+------------+-----------+---------------------------+------------------+---------------+-------------
+          1 | Amal       | Kasymova  | amal.kasymova@example.com | Computer Science | 2003-08-15    | 2022-09-01
+          2 | Askar      | Lee       | askar.lee@example.com     | Mathematics      | 2004-02-20    | 2023-01-15
+          3 | Lola       | Amanova   | lola.amanova@example.com  | Biology          | 2003-12-10    | 2022-08-30
+          4 | Lima       | Yun       | lima.yun@example.com      | History          | 2004-07-05    | 2023-02-01
+          5 | Bolot      | Kas       | bolot.kas@example.com     | Physics          | 2003-11-30    | 2022-09-15
+(5 rows)
+
+(END)^
+
+postgres=# select first_name, last_name, faculty from students where first_name = 'Amal';
+ first_name | last_name |     faculty      
+------------+-----------+------------------
+ Amal       | Kasymova  | Computer Science
+(1 row)
+
+postgres=# select first_name, last_name from students order by date_of_birth;
+ first_name | last_name 
+------------+-----------
+ Amal       | Kasymova
+ Bolot      | Kas
+ Lola       | Amanova
+ Askar      | Lee
+ Lima       | Yun
+(5 rows)
+
+postgres=# select first_name, last_name from students order by date_of_birth desc;
+ first_name | last_name 
+------------+-----------
+ Lima       | Yun
+ Askar      | Lee
+ Lola       | Amanova
+ Bolot      | Kas
+ Amal       | Kasymova
+(5 rows)
+
+postgres=# select first_name, last_name from students limit 2;
+ first_name | last_name 
+------------+-----------
+ Amal       | Kasymova
+ Askar      | Lee
+(2 rows)
+
+postgres=# select first_name, last_name, enrolled_on from students order by enrolled_on desc limit 4;
+ first_name | last_name | enrolled_on 
+------------+-----------+-------------
+ Lima       | Yun       | 2023-02-01
+ Askar      | Lee       | 2023-01-15
+ Bolot      | Kas       | 2022-09-15
+ Amal       | Kasymova  | 2022-09-01
+(4 rows)
+
+postgres=# select first_name, last_name from students where faculty = 'History';
+ first_name | last_name 
+------------+-----------
+ Lima       | Yun
+(1 row)
+
+postgres=# \q
