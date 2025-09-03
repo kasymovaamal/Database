@@ -1,0 +1,54 @@
+
+amal@MacBook-Air-Amal-2 ~ % psql -U postgres -d postgres -p 5432
+Password for user postgres: 
+psql (14.19 (Homebrew), server 17.6)
+WARNING: psql major version 14, server major version 17.
+         Some psql features might not work.
+Type "help" for help.
+
+postgres=# CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    faculty VARCHAR(100)
+);
+ERROR:  relation "students" already exists
+postgres=# DROP TABLE students;
+DROP TABLE
+postgres=# CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    faculty VARCHAR(100)
+);
+CREATE TABLE
+postgres=# DROP TABLE IF EXISTS students;
+DROP TABLE
+postgres=# CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    faculty VARCHAR(100)
+);
+CREATE TABLE
+postgres=# ALTER TABLE students ADD COLUMN date_of_birth DATE;
+ALTER TABLE
+postgres=# ALTER TABLE students RENAME TO university_students;
+ALTER TABLE
+postgres=# ALTER TABLE students DROP COLUMN faculty;
+ERROR:  relation "students" does not exist
+postgres=# ALTER TABLE university_students DROP COLUMN faculty;
+ALTER TABLE
+postgres=# ALTER TABLE university_students ADD CONSTRAINT unique_student_email UNIQUE (email);
+ALTER TABLE
+postgres=# ALTER TABLE university_students RENAME COLUMN email TO email_address;
+ALTER TABLE
+postgres=# CREATE TEMP TABLE temp_table_name (
+  id   INT,
+  note TEXT
+);
+CREATE TABLE
+postgres=# \q
