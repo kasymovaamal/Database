@@ -1,0 +1,45 @@
+amal@MacBook-Air-Amal-2 ~ %  psql -U postgres -d postgres -p 5432
+Password for user postgres: 
+psql (14.19 (Homebrew), server 17.6)
+Type "help" for help.
+
+postgres=# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(3 rows)
+
+postgres=# \c postgres
+psql (14.19 (Homebrew), server 17.6)
+You are now connected to database "postgres" as user "postgres".
+postgres=# \dt
+Did not find any relations.
+postgres=# \c postgres
+psql (14.19 (Homebrew), server 17.6)
+You are now connected to database "postgres" as user "postgres".
+postgres=# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ public | students | table | postgres
+(1 row)
+
+postgres=# SELECT * FROM students;
+
+-- delete table
+DROP TABLE students;
+ id | name  | age 
+----+-------+-----
+  1 | Alice |  21
+  2 | Bob   |  23
+  3 | Alice |  21
+  4 | Bob   |  23
+(4 rows)
+
+DROP TABLE
+postgres=# \q
