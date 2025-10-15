@@ -1,0 +1,42 @@
+library_db=# \dt
+              List of relations
+ Schema |       Name       | Type  |  Owner   
+--------+------------------+-------+----------
+ public | authors_1nf      | table | postgres
+ public | authors_3nf      | table | postgres
+ public | book_authors_1nf | table | postgres
+ public | book_authors_3nf | table | postgres
+ public | books_1nf        | table | postgres
+ public | books_3nf        | table | postgres
+ public | loans_2nf        | table | postgres
+ public | loans_3nf        | table | postgres
+ public | members_2nf      | table | postgres
+ public | members_3nf      | table | postgres
+ public | publishers_3nf   | table | postgres
+(11 rows)
+
+library_db=# \d 
+                       List of relations
+ Schema |              Name               |   Type   |  Owner   
+--------+---------------------------------+----------+----------
+ public | authors_1nf                     | table    | postgres
+ public | authors_1nf_author_id_seq       | sequence | postgres
+ public | authors_3nf                     | table    | postgres
+ public | authors_3nf_author_id_seq       | sequence | postgres
+ public | book_authors_1nf                | table    | postgres
+ public | book_authors_3nf                | table    | postgres
+ public | books_1nf                       | table    | postgres
+ public | books_1nf_book_id_seq           | sequence | postgres
+ public | books_3nf                       | table    | postgres
+ public | books_3nf_book_id_seq           | sequence | postgres
+ public | loans_2nf                       | table    | postgres
+ public | loans_2nf_loan_id_seq           | sequence | postgres
+ public | loans_3nf                       | table    | postgres
+ public | loans_3nf_loan_id_seq           | sequence | postgres
+ public | members_2nf                     | table    | postgres
+ public | members_2nf_member_id_seq       | sequence | postgres
+ public | members_3nf                     | table    | postgres
+ public | members_3nf_member_id_seq       | sequence | postgres
+ public | publishers_3nf                  | table    | postgres
+ public | publishers_3nf_publisher_id_seq | sequence | postgres
+(20 rows)
