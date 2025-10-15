@@ -1,0 +1,177 @@
+SELECT COUNT(*) AS total_members
+FROM members;
+
+SELECT COUNT(email) AS members_with_email
+FROM members;
+
+SELECT COUNT(DISTINCT membership_date) AS unique_membership_dates
+FROM members;
+
+SELECT SUM(late_fee) AS total_late_fees
+FROM loans;
+
+SELECT member_id, SUM(late_fee) AS total_fees_per_member
+FROM loans
+GROUP BY member_id;
+
+SELECT AVG(late_fee) AS average_late_fee
+FROM loans;
+
+SELECT member_id, AVG(late_fee) AS avg_fee_per_member
+FROM loans
+GROUP BY member_id;
+
+SELECT AVG(published_year) AS avg_publication_year
+FROM books;
+
+SELECT
+    MAX(late_fee) AS highest_late_fee,
+    MIN(late_fee) AS lowest_late_fee
+FROM loans;
+
+SELECT
+    MAX(membership_date) AS most_recent_member,
+    MIN(membership_date) AS oldest_member
+FROM members;
+
+SELECT
+    MAX(published_year) AS newest_book,
+    MIN(published_year) AS oldest_book
+FROM books;
+
+SELECT 
+    book_id,
+    STRING_AGG(first_name || ' ' || last_name, ', ') AS author_names
+FROM authors a
+JOIN book_authors ba ON a.author_id = ba.author_id
+GROUP BY book_id;
+
+SELECT 
+    member_id,
+    STRING_AGG(book_id::text, ', ') AS borrowed_books
+FROM loans
+GROUP BY member_id;
+
+SELECT 
+    member_id,
+    ARRAY_AGG(book_id) AS borrowed_book_ids
+FROM loans
+GROUP BY member_id;
+
+SELECT 
+    book_id,
+    ARRAY_AGG(author_id ORDER BY author_id) AS author_ids
+FROM book_authors
+GROUP BY book_id;
+
+SELECT
+    member_id,
+    COUNT(*) AS number_of_loans,
+    SUM(late_fee) AS total_fees,
+    AVG(late_fee) AS average_fee
+FROM loans
+GROUP BY member_id;
+
+SELECT
+    book_id,
+    COUNT(*) AS times_borrowed
+FROM loans
+GROUP BY book_id;
+
+SELECT
+    member_id,
+    book_id,
+    COUNT(*) AS borrow_count
+FROM loans
+GROUP BY member_id, book_id;
+
+SELECT
+    EXTRACT(YEAR FROM loan_date) AS year,
+    EXTRACT(MONTH FROM loan_date) AS month,
+    COUNT(*) AS total_loans
+FROM loans
+GROUP BY EXTRACT(YEAR FROM loan_date), EXTRACT(MONTH FROM loan_date)
+ORDER BY year, month;
+
+SELECT
+    CASE
+        WHEN published_year < 1950 THEN 'Classic'
+        WHEN published_year BETWEEN 1950 AND 2000 THEN 'Modern'
+        ELSE 'Contemporary'
+    END AS book_era,
+    COUNT(*) AS book_count,
+    AVG(published_year) AS avg_year
+FROM books
+GROUP BY
+    CASE
+        WHEN published_year < 1950 THEN 'Classic'
+        WHEN published_year BETWEEN 1950 AND 2000 THEN 'Modern'
+        ELSE 'Contemporary'
+    END;
+
+SELECT
+    member_id,
+    COUNT(*) AS loan_count
+FROM loans
+GROUP BY member_id
+HAVING COUNT(*) > 1;
+
+SELECT
+    book_id,
+    COUNT(*) AS times_borrowed,
+    AVG(late_fee) AS avg_late_fee
+FROM loans
+GROUP BY book_id
+HAVING COUNT(*) >= 2 AND AVG(late_fee) > 0;
+
+SELECT
+    COUNT(*) AS total_loans,
+    COUNT(return_date) AS returned_loans,
+    COUNT(*) - COUNT(return_date) AS active_loans
+FROM loans;
+
+SELECT
+    SUM(late_fee) AS total_fees,
+    AVG(late_fee) AS avg_fee,
+    COUNT(late_fee) AS loans_with_fees
+FROM loans;
+
+SELECT
+    member_id,
+    COUNT(*) AS total_loans,
+    MIN(loan_date) AS first_loan,
+    MAX(loan_date) AS last_loan,
+    SUM(late_fee) AS total_fees,
+    AVG(late_fee) AS avg_fee
+FROM loans
+GROUP BY member_id
+ORDER BY total_fees DESC;
+
+SELECT
+    member_id,
+    COUNT(*) AS total_loans,
+    COUNT(CASE WHEN return_date IS NULL THEN 1 END) AS active_loans,
+    COUNT(CASE WHEN late_fee > 0 THEN 1 END) AS loans_with_fees
+FROM loans
+GROUP BY member_id;
+
+SELECT
+    member_id,
+    COUNT(*) AS member_loans,
+    COUNT(*)::FLOAT / (SELECT COUNT(*) FROM loans) * 100 AS percentage_of_total
+FROM loans
+GROUP BY member_id
+ORDER BY percentage_of_total DESC;
+
+SELECT
+    m.first_name,
+    m.last_name,
+    COUNT(l.loan_id) AS total_loans,
+    SUM(l.late_fee) AS total_fees,
+    AVG(l.late_fee) AS avg_fee,
+    COUNT(CASE WHEN l.return_date IS NULL THEN 1 END) AS active_loans
+FROM members m
+LEFT JOIN loans l ON m.member_id = l.member_id
+GROUP BY m.member_id, m.first_name, m.last_name
+ORDER BY total_loans DESC;
+
