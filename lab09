@@ -1,0 +1,214 @@
+postgres=# \c library_db
+psql (14.19 (Homebrew), server 17.6)
+WARNING: psql major version 14, server major version 17.
+         Some psql features might not work.
+You are now connected to database "library_db" as user "postgres".
+library_db=# CREATE TABLE books_1nf (
+    book_id SERIAL PRIMARY KEY,
+    isbn VARCHAR(20) NOT NULL UNIQUE,
+    title VARCHAR(200) NOT NULL,
+    published_year INTEGER,
+    publisher VARCHAR(100)
+);
+
+CREATE TABLE authors_1nf (
+    author_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    birth_year INTEGER
+);
+
+CREATE TABLE book_authors_1nf (
+    book_id INTEGER,
+    author_id INTEGER,
+    PRIMARY KEY (book_id, author_id)
+);
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+library_db=# INSERT INTO books_1nf (isbn, title, published_year, publisher) VALUES
+('978-0451524935', '1984', 1949, 'Secker & Warburg'),
+('978-0141439518', 'Pride and Prejudice', 1813, 'T. Egerton'),
+('978-0544003415', 'The Lord of the Rings', 1954, 'Allen & Unwin');
+
+INSERT INTO authors_1nf (first_name, last_name, birth_year) VALUES
+('George', 'Orwell', 1903),
+('Jane', 'Austen', 1775),
+('J.R.R.', 'Tolkien', 1892);
+
+INSERT INTO book_authors_1nf (book_id, author_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+library_db=# CREATE TABLE members_2nf (
+    member_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    membership_date DATE DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE loans_2nf (
+    loan_id SERIAL PRIMARY KEY,
+    member_id INTEGER NOT NULL,
+    book_id INTEGER NOT NULL,
+    loan_date DATE DEFAULT CURRENT_DATE,
+    due_date DATE NOT NULL,
+    return_date DATE
+);
+CREATE TABLE
+CREATE TABLE
+library_db=# INSERT INTO members_2nf (first_name, last_name, email) VALUES
+('Alice', 'Johnson', 'alice.johnson@email.com'),
+('Bob', 'Smith', 'bob.smith@email.com'),
+('Carol', 'Williams', 'carol.williams@email.com');
+
+INSERT INTO loans_2nf (member_id, book_id, loan_date, due_date) VALUES
+(1, 1, '2024-01-15', '2024-02-15'),
+(2, 2, '2024-01-20', '2024-02-20'),
+(1, 3, '2024-01-25', '2024-02-25');
+INSERT 0 3
+INSERT 0 3
+library_db=# 
+library_db=# CREATE TABLE publishers_3nf (
+    publisher_id SERIAL PRIMARY KEY,
+    publisher_name VARCHAR(100) NOT NULL UNIQUE,
+    city VARCHAR(50),
+    country VARCHAR(50)
+);
+
+CREATE TABLE books_3nf (
+    book_id SERIAL PRIMARY KEY,
+    isbn VARCHAR(20) NOT NULL UNIQUE,
+    title VARCHAR(200) NOT NULL,
+    published_year INTEGER,
+    publisher_id INTEGER
+);
+
+CREATE TABLE authors_3nf (
+    author_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    birth_year INTEGER
+);
+
+CREATE TABLE book_authors_3nf (
+    book_id INTEGER,
+    author_id INTEGER,
+    PRIMARY KEY (book_id, author_id)
+);
+
+CREATE TABLE members_3nf (
+    member_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    membership_date DATE DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE loans_3nf (
+    loan_id SERIAL PRIMARY KEY,
+    member_id INTEGER NOT NULL,
+    book_id INTEGER NOT NULL,
+    loan_date DATE DEFAULT CURRENT_DATE,
+    due_date DATE NOT NULL,
+    return_date DATE
+);
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+library_db=# ALTER TABLE books_3nf 
+ADD CONSTRAINT fk_books_publisher
+FOREIGN KEY (publisher_id) 
+REFERENCES publishers_3nf(publisher_id);
+
+ALTER TABLE book_authors_3nf 
+ADD CONSTRAINT fk_book_authors_book
+FOREIGN KEY (book_id) 
+REFERENCES books_3nf(book_id);
+
+ALTER TABLE book_authors_3nf 
+ADD CONSTRAINT fk_book_authors_author
+FOREIGN KEY (author_id) 
+REFERENCES authors_3nf(author_id);
+
+ALTER TABLE loans_3nf 
+ADD CONSTRAINT fk_loans_member
+FOREIGN KEY (member_id) 
+REFERENCES members_3nf(member_id);
+
+ALTER TABLE loans_3nf 
+ADD CONSTRAINT fk_loans_book
+FOREIGN KEY (book_id) 
+REFERENCES books_3nf(book_id);
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+library_db=# 
+library_db=# INSERT INTO publishers_3nf (publisher_name, city, country) VALUES
+('Secker & Warburg', 'London', 'UK'),
+('T. Egerton', 'London', 'UK'),
+('Allen & Unwin', 'London', 'UK'),
+('Penguin Classics', 'London', 'UK');
+
+INSERT INTO books_3nf (isbn, title, published_year, publisher_id) VALUES
+('978-0451524935', '1984', 1949, 1),
+('978-0141439518', 'Pride and Prejudice', 1813, 4),
+('978-0544003415', 'The Lord of the Rings', 1954, 3);
+
+INSERT INTO authors_3nf (first_name, last_name, birth_year) VALUES
+('George', 'Orwell', 1903),
+('Jane', 'Austen', 1775),
+('J.R.R.', 'Tolkien', 1892);
+
+INSERT INTO book_authors_3nf (book_id, author_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+
+INSERT INTO members_3nf (first_name, last_name, email) VALUES
+('Alice', 'Johnson', 'alice.johnson@email.com'),
+('Bob', 'Smith', 'bob.smith@email.com'),
+('Carol', 'Williams', 'carol.williams@email.com');
+
+INSERT INTO loans_3nf (member_id, book_id, loan_date, due_date) VALUES
+(1, 1, '2024-01-15', '2024-02-15'),
+(2, 2, '2024-01-20', '2024-02-20'),
+(1, 3, '2024-01-25', '2024-02-25');
+INSERT 0 4
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+library_db=# SELECT * FROM books_1nf;
+SELECT * FROM authors_1nf;
+SELECT * FROM book_authors_1nf;
+ book_id |      isbn      |         title         | published_year |    publisher     
+---------+----------------+-----------------------+----------------+------------------
+       1 | 978-0451524935 | 1984                  |           1949 | Secker & Warburg
+       2 | 978-0141439518 | Pride and Prejudice   |           1813 | T. Egerton
+       3 | 978-0544003415 | The Lord of the Rings |           1954 | Allen & Unwin
+(3 rows)
+
+ author_id | first_name | last_name | birth_year 
+-----------+------------+-----------+------------
+         1 | George     | Orwell    |       1903
+         2 | Jane       | Austen    |       1775
+         3 | J.R.R.     | Tolkien   |       1892
+(3 rows)
+
+ book_id | author_id 
+---------+-----------
+       1 |         1
+       2 |         2
+       3 |         3
+(3 rows)
